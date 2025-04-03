@@ -9,11 +9,11 @@ class Task extends Model
 {
     use HasFactory;
 
-    protected $filable = [
+    protected $fillable = [
         'username',
-        'todo',
-        'doing',
-        'done'
+        'title',
+        'description',
+        'status'
     ];
 
 }
