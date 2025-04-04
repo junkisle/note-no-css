@@ -71,10 +71,8 @@ class TaskController extends Controller
         $taskSearch = Task::where('username', $username)->get();
 
         if ($accountSearch) {
-            return view('Tasks.homepage', 
-                ['Account' => $accountSearch], 
-                ['Tasks' => $taskSearch],
-                ['username' => $username]);
+            return redirect(route('tasks.open', 
+                ['username' => $username]));
         }
             return view('Tasks.homepage', 
                 ['Account' => $accountSearch]);

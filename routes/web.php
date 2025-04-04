@@ -37,6 +37,6 @@ Route::get('/tasks/create/{username}', [TaskController::class, 'viewCreateTasks'
 Route::post('/tasks/submit/{username}', [TaskController::class, 'submitTasks'])->name('tasks.submit');
 
 // Change task status
-Route::put('/tasks/view/{task}', [TaskController::class, 'updateTasks'])->name('tasks.update');
+Route::put('/tasks/view/update/{task}', [TaskController::class, 'updateTasks'])->name('tasks.update');
 
 //=============================================================================================//
