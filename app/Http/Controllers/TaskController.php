@@ -19,9 +19,9 @@ class TaskController extends Controller
 
         if ($accountSearch) {
             return view('Tasks.homepage', 
-            ['Account' => $accountSearch], 
-            ['Tasks' => $taskSearch],
-            ['username' => $username]);
+            ['Account' => $accountSearch, 
+            'Tasks' => $taskSearch,
+            'username' => $username]);
         }
 
         return redirect(route('index.open'))->with('error', 'Account not found');
@@ -51,7 +51,7 @@ class TaskController extends Controller
         if($insertTask){
             return redirect(route('tasks.open', 
             ['username' => $username]
-            ))->with('success', 'Account created successfully');
+            ))->with('success', 'Task created successfully');
         }
     }
 
@@ -72,9 +72,38 @@ class TaskController extends Controller
 
         if ($accountSearch) {
             return redirect(route('tasks.open', 
-                ['username' => $username]));
+                ['username' => $username]))->with('success', 'task status updated successfully');
         }
             return view('Tasks.homepage', 
-                ['Account' => $accountSearch]);
+                ['Account' => $accountSearch])->with('success', 'error editing task status');
+    }
+
+    public function viewEditTasks(Task $task){
+        return view('Tasks.edit', ['task' => $task]);
+    }
+
+    public function editTasks(Task $task, Request $request){
+        $data = $request->validate([
+            'username' => 'required',
+            'title' => 'required',
+            'description' => 'required',
+            'status' => 'required',
+        ]); 
+
+        $task->update($data);
+
+        return redirect(route('tasks.open', 
+            ['username' => $task->username]
+            ))->with('success', 'task edited successfully');
+    }
+
+    public function destroyTasks(Task $task){
+        $username = $task->username;
+        $task->delete();
+
+        return redirect(route('tasks.open', 
+            ['username' => $username]
+            ))->with('success', 'task deleted successfully');
+
     }
 }

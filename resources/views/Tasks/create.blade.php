@@ -23,8 +23,8 @@
         <div>
             <input type="text" name="description" placeholder="Description"/>
         </div>
-        <div>
-            <input type="text" name="status" value="pending" readonly/>
+        <div style="width: 100px; height:100px;">
+            <input  type="text" name="status" value="pending" readonly/>
         </div>
         <button type="submit">submit</button>
     </form>

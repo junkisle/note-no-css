@@ -21,6 +21,6 @@
 
     <a href="{{ route('tasks.open', ['username' => $Account->username]) }}" class="btn btn-primary">Tasks</a>
 
-    <a href="{{ route('signup.open') }}"><button>Notes</button></a>
+    <a href="{{ route('notes.open', ['username' => $Account->username]) }}"><button>Notes</button></a>
 </body>
 </html>
