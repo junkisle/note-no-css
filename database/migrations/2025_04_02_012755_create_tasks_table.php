@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('username');
             $table->string('title');
-            $table->string('description');
             $table->enum('status', ['pending', 'doing', 'done'])->default('pending')->index;
             $table->timestamps();
         });

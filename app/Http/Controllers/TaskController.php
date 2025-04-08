@@ -41,7 +41,6 @@ class TaskController extends Controller
         $data = $request->validate([
             'username' => 'required',
             'title' => 'required',
-            'description' => 'required',
             'status' => 'required',
         ]); 
 
@@ -72,29 +71,23 @@ class TaskController extends Controller
 
         if ($accountSearch) {
             return redirect(route('tasks.open', 
-                ['username' => $username]))->with('success', 'task status updated successfully');
+                ['username' => $username]))->with('success', 'Task status updated successfully');
         }
             return view('Tasks.homepage', 
                 ['Account' => $accountSearch])->with('success', 'error editing task status');
-    }
-
-    public function viewEditTasks(Task $task){
-        return view('Tasks.edit', ['task' => $task]);
     }
 
     public function editTasks(Task $task, Request $request){
         $data = $request->validate([
             'username' => 'required',
             'title' => 'required',
-            'description' => 'required',
-            'status' => 'required',
         ]); 
 
         $task->update($data);
 
         return redirect(route('tasks.open', 
             ['username' => $task->username]
-            ))->with('success', 'task edited successfully');
+            ))->with('success', 'Task edited successfully');
     }
 
     public function destroyTasks(Task $task){
@@ -103,7 +96,7 @@ class TaskController extends Controller
 
         return redirect(route('tasks.open', 
             ['username' => $username]
-            ))->with('success', 'task deleted successfully');
+            ))->with('success', 'Task deleted successfully');
 
     }
 }

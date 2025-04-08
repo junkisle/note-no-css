@@ -39,8 +39,6 @@ Route::post('/tasks/submit/{username}', [TaskController::class, 'submitTasks'])-
 // Change task status
 Route::put('/tasks/view/update/{task}', [TaskController::class, 'updateTasks'])->name('tasks.update');
 
-// view Edit page
-Route::get('/tasks/edit/{task}', [TaskController::class, 'viewEditTasks'])->name('tasks.viewedit');
 // submit edit change
 Route::put('/tasks/edit/submit/{task}', [TaskController::class, 'editTasks'])->name('tasks.edit');
 

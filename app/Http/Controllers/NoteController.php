@@ -69,7 +69,7 @@ class NoteController extends Controller
             'content' => 'required'
         ]);
 
-        $note->update($data);
+        $note->update($data); 
 
         return redirect(route(
             'notes.open',

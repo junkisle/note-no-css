@@ -20,9 +20,7 @@
         <div>
             <input type="text" name="title" placeholder="Name your title"/>
         </div>
-        <div>
-            <input type="text" name="description" placeholder="Description"/>
-        </div>
+
         <div style="width: 100px; height:100px;">
             <input  type="text" name="status" value="pending" readonly/>
         </div>

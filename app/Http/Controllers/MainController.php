@@ -32,11 +32,11 @@ class MainController extends Controller
         ]);
 
         $newAccount = Account::create($data);
-        if($newAccount){
-            return redirect(route('signup.open'))->with('success', 'Account created successfully');
+        if ($newAccount) {
+            return redirect()->route('signup.open')->with('success', 'Account created successfully!');
+        } else {
+            return redirect()->route('signup.open')->with('success', 'Error!');
         }
-        else
-            return redirect(route('signup.open'))->with('success', 'Error');
     }
 
     // Login registered account
@@ -52,7 +52,7 @@ class MainController extends Controller
             return redirect(route('main.open', ['username' => $loginAccount->username]));
         }
         else{
-            return redirect(route('login.open'))->with('success', 'account does not exist');
+            return redirect(route('login.open'))->with('success', 'account does not exist!');
         }
     }
 }

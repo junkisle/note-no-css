@@ -4,193 +4,129 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    
-    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <title>Tasks</title>
+
+    <style>
+        .parent {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(1, 1fr);
+            gap: 8px;
+        }
+
+    </style>
+
 </head>
 <body>
+    
+    
+    
+    <div class="container">
     @if (session()->has('success'))
-        <div>
+        <div class="mt-5 d-flex text-align-center justify-content-center alert alert-success">
             {{ session('success') }}
         </div>
     @endif
-    <p>{{ $Account->username }}, welcome to tasks</p>
-    <a href="{{ route('main.open' , ['username' => $Account->username]) }}">Back</a>
-    <h1>Tasks</h1>
+        <h1 class="mt-5">Tasks</h1>
+        <h2 class="p-3">{{ $Account->username }}, welcome to tasks</h2>
+        <a class="border border-success text-decoration-none bg-success text-light px-3 py-1 m-2" href="{{ route('main.open' , ['username' => $Account->username]) }}">Back</a>
     
-    <div class="container">
-        <div class="row">
-            <h2>Pending Tasks</h2>
-                <div>
-                    <table border="1">
-                        <tr>
-                            <th>
-                                Title
-                            </th>
-                            <th>
-                                Desciption
-                            </th>
-                            <th>
-                                Action
-                            </th>
-                        </tr>
+        <div class="parent m-2" style="height: 50vh;">
+    
+            @foreach(['pending', 'doing', 'done'] as $status)
+                <div class="col-xs-12 border border-dark p-3 text-break text-wrap overflow-y-auto">
+                    <h1>{{ ucfirst($status) }}</h1>
+    
+                    @foreach($Tasks as $Task)
+                    @if ($Task->status === $status)
 
-                        @foreach( $Tasks as $Task)
-                            @if ($Task->status === "pending")
-                                    <tr>
-                                        <td>
-                                            {{ $Task->title }}
-                                        </td>
-                
-                                        <td>
-                                            {{ $Task->description }}
-                                        </td>
-                                        <td>                   <!-- indicate task id vvv to be passed to route -->
-                                            <form action="{{ route('tasks.update', ['task' => $Task->id]) }}" method="post" >
-                                                @csrf
-                                                @method('put')
-                                                <select name="status" onchange="this.form.submit()">
-                                                    <option value="pending">Pending </option>
+                        <div class="d-flex align-items-center my-2 mt-2 mx-5 py-1 text-wrap">
+                            <div class="dropdown mx-2">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    {{-- Button content (empty) --}}
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    {{-- Status Change --}}
+                                    <li>
+                                        <form action="{{ route('tasks.update', ['task' => $Task->id]) }}" method="POST" class="dropdown-item p-0">
+                                            @csrf
+                                            @method('put')
+                                            <select name="status" class="form-select border-0" onchange="this.form.submit()">
+                                                <option disabled selected>Change status</option>
+                                                @if ($status === 'pending')
                                                     <option value="doing">Doing</option>
                                                     <option value="done">Done</option>
-                
-                                                </select>
-                                            </form>
-                                            <div>
-                                                <form action="{{ route('tasks.viewedit', ['task' => $Task]) }}">
-                                                    @csrf
-                                                    <button>
-                                                        Edit
-                                                    </button>  
-                                                </form>
-                                            </div>
-                                            <div>
-                                                <form action="{{ route('tasks.destroy', ['task' => $Task]) }}" method="post" >
-                                                    @csrf
-                                                    @method('delete')
-                                                    <input type="submit" value="Delete">
-                                                </form>
-                                            </div>
-                                        </td>
-                                    </tr>
-                            @endif
-                        @endforeach
-                    </table>
-                </div>
-                <p></p>
-                <h2>Doing</h2>
-                <div>
-                    <table border="1">
-                        <tr>
-                            <th>
-                                Title
-                            </th>
-                            <th>
-                                Desciption
-                            </th>
-                            <th>
-                                Action
-                            </th>
-                        </tr>
-
-                        @foreach($Tasks as $Task)
-                            @if ($Task->status === "doing")
-                                    <tr>
-                                        <td>
-                                            {{ $Task->title }}
-                                        </td>
-
-                                        <td>
-                                            {{ $Task->description }}
-                                        </td>
-                                        <td>                   <!-- indicate task id vvv to be passed to route -->
-                                            <form action="{{ route('tasks.update', ['task' => $Task->id]) }}" method="post" >
-                                                @csrf
-                                                @method('put')
-                                                <select name="status" onchange="this.form.submit()">
-                                                    <option value="doing">Doing</option>
-                                                    <option value="pending">Pending </option>
+                                                @elseif ($status === 'doing')
+                                                    <option value="pending">Pending</option>
                                                     <option value="done">Done</option>
-                
-                                                </select>
-                                            </form>
-                                            <div>
-                                                <form action="{{ route('tasks.viewedit', ['task' => $Task]) }}">
-                                                    @csrf
-                                                    <button>
-                                                        Edit
-                                                    </button>  
-                                                </form>
-                                            </div>
-                                            <div>
-                                                <form action="{{ route('tasks.destroy', ['task' => $Task]) }}" method="post" >
-                                                    @csrf
-                                                    @method('delete')
-                                                    <input type="submit" value="Delete">
-                                                </form>
-                                            </div>
-                                        </td>
-                                    </tr>
-                            @endif
-                        @endforeach
-                    </table>
-                </div>
-                <p></p>
-                <h2>Done</h2>
-                <div>
-                    <table border="1">   
-                        <tr>
-                            <th>
-                                Title
-                            </th>
-                            <th>
-                                Desciption
-                            </th>
-                            <th>
-                                Action
-                            </th>
-                        </tr>
-
-                        @foreach( $Tasks as $Task)
-                            @if ($Task->status === "done")
-                                    <tr>
-                                        <td>
-                                            {{ $Task->title }}
-                                        </td>
-
-                                        <td>
-                                            {{ $Task->description }}
-                                        </td>
-                                        <td>                   <!-- indicate task id vvv to be passed to route -->
-                                            <form action="{{ route('tasks.update', ['task' => $Task->id]) }}" method="post" >
-                                                @csrf
-                                                @method('put')
-                                                <select name="status" onchange="this.form.submit()">
-                                                    <option value="done">Done</option>
-                                                    <option value="pending">Pending </option>
+                                                @else
+                                                    <option value="pending">Pending</option>
                                                     <option value="doing">Doing</option>
-                                                </select>
-                                            </form>
+                                                @endif
+                                            </select>
+                                        </form>
+                                    </li>
+                                    {{-- Edit Task Button (Triggers Modal) --}}
+                                    <li>
+                                        <button class="dropdown-item" data-bs-toggle="modal" data-bs-target="#editTaskModal{{ $Task->id }}">
+                                            Edit
+                                        </button>
+                                    </li>
+                                    {{-- Delete Task --}}
+                                    <li>
+                                        <form action="{{ route('tasks.destroy', ['task' => $Task->id]) }}" method="POST">
+                                            @csrf
+                                            @method('delete')
+                                            <button class="dropdown-item text-danger" type="submit" onclick="return confirm('Are you sure?')">
+                                                Delete
+                                            </button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </div>
+                            <h5 class="mb-0">{{ $Task->title }}</h5>
+                        </div>
+
+                        <!-- Modal for Editing Task -->
+                        <div class="modal fade" id="editTaskModal{{ $Task->id }}" tabindex="-1" aria-labelledby="editTaskModalLabel{{ $Task->id }}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="editTaskModalLabel{{ $Task->id }}">Edit Task</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="{{ route('tasks.edit', ['task' => $Task->id]) }}" method="POST">
+                                            @csrf
+                                            @method('put')
                                             <div>
-                                                <form action="{{ route('tasks.viewedit', ['task' => $Task]) }}">
-                                                    @csrf
-                                                    <input type="submit" value="edit">
-                                                </form>
+                                                <input type="hidden" name="username" value="{{ $Task->username }}" readonly/>
                                             </div>
-                                            <div>
-                                                <form action="{{ route('tasks.destroy', ['task' => $Task]) }}" method="post" >
-                                                    @csrf
-                                                    @method('delete')
-                                                    <input type="submit" value="Delete">
-                                                </form>
+                                            <div class="mb-3">
+                                                <label for="taskTitle{{ $Task->id }}" class="form-label">Title</label>
+                                                <input type="text" class="form-control" id="taskTitle{{ $Task->id }}" name="title" value="{{ $Task->title }}" required>
                                             </div>
-                                        </td>
-                                    </tr>
-                            @endif
-                        @endforeach
-                    </table>
-                </div>    
+
+                                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                @endforeach
             </div>
-        <a href="{{ route('tasks.viewcreate', ['username' => $Account->username]) }}">Add Task</a>
+        @endforeach
     </div>
+
+    <a class="border border-primary text-decoration-none bg-primary text-light px-3 py-1 m-2" href="{{ route('tasks.viewcreate', ['username' => $Account->username]) }}">Add Task</a>
+</div>
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

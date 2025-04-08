@@ -47,7 +47,6 @@
                             <div>
                                 <p>{{ $Note->content }}</p>
                             </div>
-                            
                     </div>
                     
                 @endforeach
