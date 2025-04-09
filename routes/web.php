@@ -66,4 +66,4 @@ Route::get('/notes/edit/{title}', [NoteController::class, 'viewEditNotes'])->nam
 Route::put('/notes/edit/submit/{note}', [NoteController::class, 'editNotes'])->name('notes.edit');
 
 // Delete note
-Route::delete('/notes/delete/{note}', [NoteController::class, 'deleteNotes'])->name('notes.delete');
+Route::delete('/notes/view/delete/{note}', [NoteController::class, 'deleteNotes'])->name('notes.delete');

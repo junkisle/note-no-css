@@ -37,7 +37,7 @@ class NoteController extends Controller
     public function submitNotes(Request $request, $username){
         $data = $request->validate([
             'username' => 'required',
-            'title' => 'required|unique',
+            'title' => 'required|unique:notes,title',
             'description' => 'nullable',
             'content' => 'required'
         ]);

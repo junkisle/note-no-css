@@ -5,59 +5,137 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 <body>
     
-    <div class="container">
-        <div class="header">
-            <h1>welcome to notes {{ $Account->username }}</h1>
-        </div>
-        <h1>date</h1>
-        <div class="section" style="height: 200px; width: 100px; overflow-y:auto;">
-            @if ($Notes->isEmpty())
-                <button>
-                    <a href="{{ route('notes.create', ['username' => $Account->username]) }}">Start your journey with us!</a>
-                </button>
-            @else
-                @foreach ($Notes as $index => $Note)
-                    <button onclick="showNote({{ $index }})">{{ $Note->created_at }}</button><br>
-                @endforeach
-            @endif
-        </div>
-        
-        <div>
-            <h1>Notes</h1>
-            @if ($Notes->isEmpty())
-                <h1>Start your journey with us!</h1>
-            @else
-                @foreach ($Notes as $index => $Note)
-                    <div id="note-{{ $index }}" class="note-content" style="display: none;">
-                        
-                        <a class="button" href="{{ route('notes.editView', ['title' => $Note]) }}" value="{{ $Note->title }}">
-                            Edit note {{ $Note->title }}
-                        </a> 
-                        <form action="{{ route('notes.delete', ['note' => $Note->id]) }}" method="post">
-                            @csrf
-                            @method('delete')
-                            <input type="submit" value="delete"/>
-                        </form>
-                            <h1>{{ $Note->title }}</h1>
-                            <h2>{{ $Note->description }}</h2>
-
-                            <div>
-                                <p>{{ $Note->content }}</p>
-                            </div>
+    <div class="container mt-5 py-3 bg-warning border border-secondary rounded-2">
+        <header class="header border-bottom border-dark mb-4">
+            <h1>Welcome to notes, {{ $Account->username }}</h1>
+        </header>
+            <div class="row">
+                <div class="col-sm-12 col-md-2">
+                    <div class="section border border-dark px-2" style="height: 600px; width: 200px; ">
+                    @if ($Notes->isEmpty())
+                        <button class="btn btn-info">
+                            <a href="{{ route('notes.create', ['username' => $Account->username]) }}">Start your journey with us!</a>
+                        </button>
+                    @else
+                        @foreach ($Notes as $index => $Note)
+                            <button class="btn btn-primary m-1" onclick="showNote({{ $index }})">{{ $Note->created_at }}</button><br>
+                        @endforeach
+                    @endif
                     </div>
-                    
-                @endforeach
-            @endif
-            
-        </div>
+                </div>
+                
+                <div class="col-md-10 col-sm-12">
+                    <div>
+                        <h1>Notes</h1>
+                        @if ($Notes->isEmpty())
+                            <h1>Start your journey with us!</h1>
+                        @else
+                        @foreach ($Notes as $index => $Note)
+                                <div id="note-{{ $index }}" class="note-content bg-light px-5 py-3 mx-4" style="display: none; height:540px; overflow-y:auto">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <form action="{{ route('notes.delete', ['note' => $Note->id]) }}" method="post" class="mb-0">
+                                            @csrf
+                                            @method('delete')
+                                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                        </form>
+                                    
+                                        <button class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#editNoteModal{{ $Note->id }}">
+                                            Edit
+                                        </button>
+                                    </div>
+                            
+                                    <h1>{{ $Note->title }}</h1>
+                                    <h6>{{ $Note->description }}</h6>
 
-        <div class="section">
-            <a href="{{ route('notes.create', ['username' => $Account->username]) }}">add a note</a>
-        </div>
-    </div>
+                                    <div class="mh-100 d-inline-block" style="overflow-y:scroll;">
+                                        <p>{{ $Note->content }}</p>
+                                    </div>
+
+                                </div>
+                            
+                                <!-- Modal should be here, inside the loop -->
+                                <div class="modal fade" id="editNoteModal{{ $Note->id }}" tabindex="-1" aria-labelledby="editNoteModalLabel{{ $Note->id }}" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="editNoteModalLabel{{ $Note->id }}">Edit Note</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form action="{{ route('notes.edit', ['note' => $Note->id]) }}" method="POST">
+                                                    @csrf
+                                                    @method('put')
+                                                    <input type="hidden" name="username" value="{{ $Note->username }}" />
+                            
+                                                    <div class="mb-3">
+                                                        <label for="noteTitle{{ $Note->id }}" class="form-label">Title</label>
+                                                        <input type="text" class="form-control" id="noteTitle{{ $Note->id }}" name="title" value="{{ $Note->title }}" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="noteDescription{{ $Note->id }}" class="form-label">Description</label>
+                                                        <input type="text" class="form-control" id="noteDescription{{ $Note->id }}" name="description" value="{{ $Note->description }}" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="noteContent{{ $Note->id }}" class="form-label">Content</label>
+                                                        <textarea class="form-control" id="noteContent{{ $Note->id }}" name="content" required>{{ $Note->content }}</textarea>
+                                                    </div>
+                            
+                                                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        @endif
+                    
+                    </div>
+                </div>
+            </div>
+            
+            <button class="btn btn-success btn-sm mt-1" data-bs-toggle="modal" data-bs-target="#addNoteModal{{ $Note->id }}">
+                Add a Note
+            </button>
+
+            <div class="modal fade" id="addNoteModal{{ $Note->id }}" tabindex="-1" aria-labelledby="addNoteModalLabel{{ $Note->id }}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addNoteModalLabel{{ $Note->id }}">Add Note</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="{{ route('notes.submit', ['username' => $Note->username]) }}" method="POST">
+                                @csrf
+                                @method('post')
+                                <input type="hidden" name="username" value="{{ $Note->username }}" />
+        
+                                <div class="mb-3">
+                                    <label for="noteTitle{{ $Note->id }}" class="form-label">Title</label>
+                                    <input type="text" class="form-control" id="noteTitle{{ $Note->id }}" name="title" required/>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="noteDescription{{ $Note->id }}" class="form-label">Description</label>
+                                    <input type="text" class="form-control" id="noteDescription{{ $Note->id }}" name="description" required/>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="noteContent{{ $Note->id }}" class="form-label">Content</label>
+                                    <textarea class="form-control" id="noteContent{{ $Note->id }}" name="content" required></textarea>
+                                </div>
+        
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+    </div name="end container">
+
     <script>
         function showNote(index) {
             const notes = document.querySelectorAll('.note-content');
@@ -69,5 +147,6 @@
             }
         }
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
