@@ -123,7 +123,7 @@
                     @endforeach
                 </div>  
                                     <div class="col-4">
-                                        <button class="p-2 d-flex justify-content-center dropdown-item border mt-2 bg-primary text-white" data-bs-toggle="modal" data-bs-target="#addNewTaskModal">
+                                        <button class="p-2 d-flex justify-content-center dropdown-item border my-2 bg-primary text-white" data-bs-toggle="modal" data-bs-target="#addNewTaskModal">
                                             Add a Task
                                         </button>
                                     </div>
